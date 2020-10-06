@@ -5,26 +5,38 @@
  *      Author: keith
  */
 #include "../includes/scheduler.h"
+#include "../includes/PCB.h"
+#include "../includes/constants.h"
+#include <queue>
 
 using namespace std;
 
-PCB thing;
 
 //add a process, either a new one or one that
 //had been running on the CPU and has been preempted
 void Scheduler::add(PCB p) {
-
+	ready_q->push(p);
+	sort();
 }
 
 //get next process
 PCB Scheduler::getNext() {
-	return thing;
+	if (!ready_q->empty()) {
+		PCB temp = ready_q->front();
+		ready_q->pop();
+		return temp;
+	}
+	return PCB();
+
 }
 
 //returns true if there are no  jobs in the readyQ
 //false otherwise
 bool Scheduler::isEmpty(){
-	return true;
+	if (ready_q->empty()) {
+		return true;
+	}
+	return false;
 }
 
 //if process has completed (used all its remaining_cpu_time) or
@@ -34,7 +46,8 @@ bool Scheduler::isEmpty(){
 //true - switch processes
 //false - do not switch
 bool Scheduler::time_to_switch_processes(int tick_count, PCB &p){
-	return false;
+	sort();
+	return (p.remaining_cpu_time <= 0 || (preemptive && (tick_count - p.start_time) >= time_slice));
 }
 
 

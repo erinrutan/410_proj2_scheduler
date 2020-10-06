@@ -12,12 +12,12 @@ using namespace std;
 
 //override base class behaviour if necessary, otherwise call it
 bool  Scheduler_FIFO::time_to_switch_processes(int tick_count, PCB &p){
-	return false;
+	return Scheduler::time_to_switch_processes(tick_count, p);
 }
 
 //FIFO - not preemptive - no sorting needed
 void Scheduler_FIFO::sort(){
-
+	preemptive = false;
 }
 
 
